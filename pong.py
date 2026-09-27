@@ -5,7 +5,7 @@ wind.title("Ping Pong ")
 wind.bgcolor("black")
 wind.setup(width = 800, height= 600)
 wind.tracer(0)
-
+##
 
 #Racket1
 Racket1 = turtle.Turtle()
