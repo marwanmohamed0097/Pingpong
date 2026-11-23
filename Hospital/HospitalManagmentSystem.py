@@ -165,6 +165,12 @@ class ManagementSystem:
                 return doctor
         return None
 
+    def get_available_doctors(self):
+        return [
+            doctor for doctor in self.doctors
+            if doctor.available is True
+        ]
+
     def update_doctor(self, name, new_info):
         doctor = self.find_doctor(name)
         if doctor:
