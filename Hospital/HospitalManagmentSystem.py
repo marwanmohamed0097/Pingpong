@@ -249,6 +249,12 @@ class ManagementSystem:
                 return medicine
         return None
 
+    def get_low_stock_medicines(self, threshold=5):
+        return [
+            medicine for medicine in self.medicines
+            if medicine.quantity <= threshold
+        ]
+
     def update_medicine(self, name, new_info):
         medicine = self.find_medicine(name)
         if medicine:
