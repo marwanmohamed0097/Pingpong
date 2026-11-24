@@ -361,7 +361,13 @@ class ManagementSystem:
         return self.Nurses
 
     def get_medicines(self):
-        return self.medicines   
+        return self.medicines
+
+    def get_total_medicine_value(self):
+        return sum(
+            medicine.quantity * medicine.price
+            for medicine in self.medicines
+        )   
 
     def get_laboratory_tests(self):
         return self.laboratory_tests    
