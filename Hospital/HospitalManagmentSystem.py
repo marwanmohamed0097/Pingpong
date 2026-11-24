@@ -198,6 +198,12 @@ class ManagementSystem:
                 return appointment
         return None
 
+    def get_patient_appointments(self, patient_name):
+        return [
+            appointment for appointment in self.appointments
+            if appointment.patient_name == patient_name
+        ]
+
     def cancel_appointment(self, patient_name, doctor_name):
         appointment = self.find_appointment(patient_name, doctor_name)
         if appointment:
