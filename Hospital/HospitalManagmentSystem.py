@@ -198,6 +198,12 @@ class ManagementSystem:
                 return appointment
         return None
 
+    def get_doctor_appointments(self, doctor_name):
+        return [
+            appointment for appointment in self.appointments
+            if appointment.doctor_name == doctor_name
+        ]
+
     def get_patient_appointments(self, patient_name):
         return [
             appointment for appointment in self.appointments
