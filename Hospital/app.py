@@ -24,6 +24,15 @@ def init_db():
                 address TEXT NOT NULL
             )
         """)
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS doctors (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                specialization TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                availability TEXT NOT NULL
+            )
+        """)
 
 
 init_db()
@@ -35,8 +44,15 @@ def dashboard():
         patient_count = connection.execute(
             "SELECT COUNT(*) FROM patients"
         ).fetchone()[0]
+        doctor_count = connection.execute(
+            "SELECT COUNT(*) FROM doctors"
+        ).fetchone()[0]
 
-    return render_template("index.html", patient_count=patient_count)
+    return render_template(
+        "index.html",
+        patient_count=patient_count,
+        doctor_count=doctor_count
+    )
 
 
 @app.route("/patients", methods=["GET", "POST"])
@@ -92,6 +108,52 @@ def delete_patient(patient_id):
         )
 
     return redirect(url_for("patients"))
+
+
+@app.route("/doctors", methods=["GET", "POST"])
+def doctors():
+    error = None
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        specialization = request.form.get("specialization", "").strip()
+        phone = request.form.get("phone", "").strip()
+        availability = request.form.get("availability", "").strip()
+
+        if not all([name, specialization, phone, availability]):
+            error = "Please complete all fields."
+        else:
+            with get_connection() as connection:
+                connection.execute(
+                    """
+                    INSERT INTO doctors (name, specialization, phone, availability)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (name, specialization, phone, availability)
+                )
+            return redirect(url_for("doctors"))
+
+    with get_connection() as connection:
+        doctor_list = connection.execute(
+            "SELECT * FROM doctors ORDER BY id DESC"
+        ).fetchall()
+
+    return render_template(
+        "doctors.html",
+        doctors=doctor_list,
+        error=error
+    )
+
+
+@app.route("/doctors/<int:doctor_id>/delete", methods=["POST"])
+def delete_doctor(doctor_id):
+    with get_connection() as connection:
+        connection.execute(
+            "DELETE FROM doctors WHERE id = ?",
+            (doctor_id,)
+        )
+
+    return redirect(url_for("doctors"))
 
 
 if __name__ == "__main__":

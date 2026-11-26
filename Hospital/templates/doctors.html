@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Hospital Management</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+        </nav>
+    </header>
+    <main class="container">
+        <h2>Doctor Management</h2>
+        <section class="card form-card">
+            <h3>Add a doctor</h3>
+            {% if error %}<p class="error">{{ error }}</p>{% endif %}
+            <form method="post" action="{{ url_for('doctors') }}">
+                <label for="name">Name</label>
+                <input id="name" name="name" required>
+                <label for="specialization">Specialization</label>
+                <input id="specialization" name="specialization" required>
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" required>
+                <label for="availability">Availability</label>
+                <select id="availability" name="availability" required>
+                    <option value="">Select</option>
+                    <option>Available</option>
+                    <option>Unavailable</option>
+                </select>
+                <button class="button" type="submit">Save doctor</button>
+            </form>
+        </section>
+        <section class="card table-card">
+            <h3>Doctors</h3>
+            {% if doctors %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Specialization</th><th>Phone</th><th>Availability</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td>{{ doctor.name }}</td>
+                            <td>{{ doctor.specialization }}</td>
+                            <td>{{ doctor.phone }}</td>
+                            <td>{{ doctor.availability }}</td>
+                            <td>
+                                <form method="post" action="{{ url_for('delete_doctor', doctor_id=doctor.id) }}">
+                                    <button class="delete-button" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="status">No doctors have been added yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

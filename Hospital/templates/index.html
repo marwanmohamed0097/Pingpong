@@ -9,7 +9,11 @@
 <body>
     <header class="topbar">
         <h1>Hospital Management</h1>
-        <nav><a href="{{ url_for('dashboard') }}">Dashboard</a><a href="{{ url_for('patients') }}">Patients</a></nav>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+        </nav>
     </header>
     <main class="container">
         <h2>Dashboard</h2>
@@ -22,7 +26,8 @@
             </article>
             <article class="card">
                 <h3>Doctors</h3>
-                <p class="status">Coming soon</p>
+                <p class="number">{{ doctor_count }}</p>
+                <a class="button" href="{{ url_for('doctors') }}">Manage doctors</a>
             </article>
             <article class="card">
                 <h3>Appointments</h3>
