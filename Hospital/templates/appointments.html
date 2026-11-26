@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Hospital Management</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
+        </nav>
+    </header>
+    <main class="container">
+        <h2>Appointment Management</h2>
+        <section class="card form-card">
+            <h3>Book an appointment</h3>
+            {% if error %}<p class="error">{{ error }}</p>{% endif %}
+            {% if patients and doctors %}
+            <form method="post" action="{{ url_for('appointments') }}">
+                <label for="patient_id">Patient</label>
+                <select id="patient_id" name="patient_id" required>
+                    <option value="">Select a patient</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="doctor_id">Available doctor</label>
+                <select id="doctor_id" name="doctor_id" required>
+                    <option value="">Select a doctor</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }} — {{ doctor.specialization }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="appointment_date">Date</label>
+                <input id="appointment_date" name="appointment_date" type="date" required>
+
+                <label for="appointment_time">Time</label>
+                <input id="appointment_time" name="appointment_time" type="time" required>
+
+                <button class="button" type="submit">Book appointment</button>
+            </form>
+            {% else %}
+            <p class="status">Add at least one patient and one available doctor before booking.</p>
+            {% endif %}
+        </section>
+
+        <section class="card table-card">
+            <h3>Appointments</h3>
+            {% if appointments %}
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Patient</th><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.patient_name }}</td>
+                            <td>{{ appointment.doctor_name }}</td>
+                            <td>{{ appointment.specialization }}</td>
+                            <td>{{ appointment.appointment_date }}</td>
+                            <td>{{ appointment.appointment_time }}</td>
+                            <td>{{ appointment.status }}</td>
+                            <td>
+                                {% if appointment.status == "Scheduled" %}
+                                <form method="post" action="{{ url_for('cancel_appointment', appointment_id=appointment.id) }}">
+                                    <button class="delete-button" type="submit">Cancel</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="status">No appointments have been booked yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

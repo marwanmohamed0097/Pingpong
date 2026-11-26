@@ -13,6 +13,7 @@
             <a href="{{ url_for('dashboard') }}">Dashboard</a>
             <a href="{{ url_for('patients') }}">Patients</a>
             <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
         </nav>
     </header>
     <main class="container">
@@ -30,8 +31,9 @@
                 <a class="button" href="{{ url_for('doctors') }}">Manage doctors</a>
             </article>
             <article class="card">
-                <h3>Appointments</h3>
-                <p class="status">Coming soon</p>
+                <h3>Scheduled appointments</h3>
+                <p class="number">{{ appointment_count }}</p>
+                <a class="button" href="{{ url_for('appointments') }}">Manage appointments</a>
             </article>
         </section>
     </main>

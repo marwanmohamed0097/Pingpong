@@ -13,6 +13,7 @@
             <a href="{{ url_for('dashboard') }}">Dashboard</a>
             <a href="{{ url_for('patients') }}">Patients</a>
             <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
         </nav>
     </header>
     <main class="container">
@@ -41,23 +42,19 @@
             {% if doctors %}
             <div class="table-wrap">
                 <table>
-                    <thead>
-                        <tr><th>Name</th><th>Specialization</th><th>Phone</th><th>Availability</th><th>Action</th></tr>
-                    </thead>
+                    <thead><tr><th>Name</th><th>Specialization</th><th>Phone</th><th>Availability</th><th>Action</th></tr></thead>
                     <tbody>
-                        {% for doctor in doctors %}
+                    {% for doctor in doctors %}
                         <tr>
-                            <td>{{ doctor.name }}</td>
-                            <td>{{ doctor.specialization }}</td>
-                            <td>{{ doctor.phone }}</td>
-                            <td>{{ doctor.availability }}</td>
+                            <td>{{ doctor.name }}</td><td>{{ doctor.specialization }}</td>
+                            <td>{{ doctor.phone }}</td><td>{{ doctor.availability }}</td>
                             <td>
                                 <form method="post" action="{{ url_for('delete_doctor', doctor_id=doctor.id) }}">
                                     <button class="delete-button" type="submit">Delete</button>
                                 </form>
                             </td>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
