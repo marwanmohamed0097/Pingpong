@@ -23,13 +23,23 @@ body {
     font-size: 22px;
 }
 
+nav {
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
 .container {
     max-width: 1100px;
-    margin: 48px auto;
+    margin: 40px auto;
     padding: 0 24px;
 }
 
-.intro {
+.intro, .status {
     color: #64748b;
 }
 
@@ -41,27 +51,75 @@ body {
 }
 
 .card {
+    margin: 20px 0;
     padding: 24px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 16px #0f172a12;
 }
 
-.status {
-    color: #64748b;
-    font-size: 14px;
+.number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #123b5d;
+}
+
+form {
+    display: grid;
+    gap: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.button, .delete-button {
+    display: inline-block;
+    width: fit-content;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 6px;
+    background: #1677a8;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.delete-button {
+    background: #b42318;
+}
+
+.error {
+    color: #b42318;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
 }
 
 @media (max-width: 600px) {
     .topbar {
         padding: 18px 20px;
-    }
-
-    .topbar h1 {
-        font-size: 18px;
+        align-items: flex-start;
+        gap: 14px;
+        flex-direction: column;
     }
 
     .container {
-        margin-top: 30px;
+        margin-top: 24px;
     }
 }
