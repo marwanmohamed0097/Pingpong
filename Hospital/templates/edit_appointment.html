@@ -18,7 +18,6 @@
             <a href="{{ url_for('nurses.nurse_list') }}">Nurses</a>
         </nav>
     </header>
-
     <main class="container">
         <h2>Edit Appointment</h2>
         <section class="card form-card">
@@ -27,28 +26,22 @@
                 <label for="patient_id">Patient</label>
                 <select id="patient_id" name="patient_id" required>
                     {% for patient in patients %}
-                    <option value="{{ patient.id }}" {% if appointment.patient_id|int == patient.id %}selected{% endif %}>
-                        {{ patient.name }}
-                    </option>
+                    <option value="{{ patient.id }}" {% if appointment.patient_id|int == patient.id %}selected{% endif %}>{{ patient.name }}</option>
                     {% endfor %}
                 </select>
 
                 <label for="doctor_id">Doctor</label>
                 <select id="doctor_id" name="doctor_id" required>
                     {% for doctor in doctors %}
-                    <option value="{{ doctor.id }}" {% if appointment.doctor_id|int == doctor.id %}selected{% endif %}>
-                        {{ doctor.name }} — {{ doctor.specialization }}
-                    </option>
+                    <option value="{{ doctor.id }}" {% if appointment.doctor_id|int == doctor.id %}selected{% endif %}>{{ doctor.name }} — {{ doctor.specialization }}</option>
                     {% endfor %}
                 </select>
 
                 <label for="appointment_date">Date</label>
-                <input id="appointment_date" name="appointment_date" type="date"
-                       value="{{ appointment.appointment_date }}" required>
+                <input id="appointment_date" name="appointment_date" type="date" value="{{ appointment.appointment_date }}" required>
 
                 <label for="appointment_time">Time</label>
-                <input id="appointment_time" name="appointment_time" type="time"
-                       value="{{ appointment.appointment_time }}" required>
+                <input id="appointment_time" name="appointment_time" type="time" value="{{ appointment.appointment_time }}" required>
 
                 <button class="button" type="submit">Update appointment</button>
                 <a class="button" href="{{ url_for('appointments') }}">Back to appointments</a>
