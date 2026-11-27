@@ -6,6 +6,8 @@ import os
 import sqlite3
 
 app = Flask(__name__)
+from export_routes import exports_bp
+app.register_blueprint(exports_bp)
 app.register_blueprint(medicines_bp)
 app.register_blueprint(lab_tests_bp)
 app.register_blueprint(nurses_bp)
@@ -494,6 +496,7 @@ def cancel_appointment(appointment_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
