@@ -1,9 +1,11 @@
 ﻿from flask import Flask, render_template, request, redirect, url_for
+from lab_test_routes import lab_tests_bp
 from nurse_routes import nurses_bp
 import os
 import sqlite3
 
 app = Flask(__name__)
+app.register_blueprint(lab_tests_bp)
 app.register_blueprint(nurses_bp)
 DATABASE = os.path.join(app.root_path, "hospital.db")
 
@@ -490,6 +492,7 @@ def cancel_appointment(appointment_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
