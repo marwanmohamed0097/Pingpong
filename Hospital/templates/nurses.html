@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Hospital Management</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
+            <a href="{{ url_for('medicines.medicine_list') }}">Medicines</a>
+            <a href="{{ url_for('nurses.nurse_list') }}">Nurses</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Nurse Management</h2>
+
+        <section class="card form-card">
+            <h3>Add a nurse</h3>
+            {% if error %}<p class="error">{{ error }}</p>{% endif %}
+            <form method="post" action="{{ url_for('nurses.nurse_list') }}">
+                <label for="name">Name</label>
+                <input id="name" name="name" required>
+
+                <label for="department">Department</label>
+                <input id="department" name="department" required>
+
+                <label for="shift">Shift</label>
+                <select id="shift" name="shift" required>
+                    <option value="">Select a shift</option>
+                    <option>Morning</option>
+                    <option>Evening</option>
+                    <option>Night</option>
+                </select>
+
+                <button class="button" type="submit">Save nurse</button>
+            </form>
+        </section>
+
+        <section class="card table-card">
+            <h3>Nurses</h3>
+            {% if nurses %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Department</th><th>Shift</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for nurse in nurses %}
+                        <tr>
+                            <td>{{ nurse.name }}</td>
+                            <td>{{ nurse.department }}</td>
+                            <td>{{ nurse.shift }}</td>
+                            <td>
+                                <form method="post" action="{{ url_for('nurses.delete_nurse', nurse_id=nurse.id) }}">
+                                    <button class="delete-button" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="status">No nurses have been added yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
