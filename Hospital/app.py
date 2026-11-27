@@ -370,6 +370,114 @@ def appointments():
     )
 
 
+
+@app.route("/appointments/<int:appointment_id>/edit", methods=["GET", "POST"])
+def edit_appointment(appointment_id):
+    with get_connection() as connection:
+        appointment = connection.execute(
+            "SELECT * FROM appointments WHERE id = ?",
+            (appointment_id,)
+        ).fetchone()
+
+    if appointment is None or appointment["status"] != "Scheduled":
+        return redirect(url_for("appointments"))
+
+    form_data = {
+        "patient_id": str(appointment["patient_id"]),
+        "doctor_id": str(appointment["doctor_id"]),
+        "appointment_date": appointment["appointment_date"],
+        "appointment_time": appointment["appointment_time"]
+    }
+    error = None
+
+    if request.method == "POST":
+        form_data = {
+            "patient_id": request.form.get("patient_id", "").strip(),
+            "doctor_id": request.form.get("doctor_id", "").strip(),
+            "appointment_date": request.form.get("appointment_date", "").strip(),
+            "appointment_time": request.form.get("appointment_time", "").strip()
+        }
+
+        try:
+            patient_id = int(form_data["patient_id"])
+            doctor_id = int(form_data["doctor_id"])
+        except ValueError:
+            error = "Please select a patient and a doctor."
+
+        if not form_data["appointment_date"] or not form_data["appointment_time"]:
+            error = "Please select a date and time."
+
+        if error is None:
+            with get_connection() as connection:
+                patient = connection.execute(
+                    "SELECT id FROM patients WHERE id = ?", (patient_id,)
+                ).fetchone()
+                doctor = connection.execute(
+                    "SELECT id, availability FROM doctors WHERE id = ?", (doctor_id,)
+                ).fetchone()
+
+                if patient is None:
+                    error = "The selected patient was not found."
+                elif doctor is None:
+                    error = "The selected doctor was not found."
+                elif doctor["availability"] != "Available":
+                    error = "The selected doctor is not available."
+                else:
+                    conflict = connection.execute(
+                        """
+                        SELECT id FROM appointments
+                        WHERE appointment_date = ?
+                          AND appointment_time = ?
+                          AND status = 'Scheduled'
+                          AND id != ?
+                          AND (patient_id = ? OR doctor_id = ?)
+                        """,
+                        (
+                            form_data["appointment_date"],
+                            form_data["appointment_time"],
+                            appointment_id,
+                            patient_id,
+                            doctor_id
+                        )
+                    ).fetchone()
+
+                    if conflict:
+                        error = "The patient or doctor already has an appointment at that time."
+                    else:
+                        connection.execute(
+                            """
+                            UPDATE appointments
+                            SET patient_id = ?, doctor_id = ?,
+                                appointment_date = ?, appointment_time = ?
+                            WHERE id = ?
+                            """,
+                            (
+                                patient_id,
+                                doctor_id,
+                                form_data["appointment_date"],
+                                form_data["appointment_time"],
+                                appointment_id
+                            )
+                        )
+
+            if error is None:
+                return redirect(url_for("appointments"))
+
+    with get_connection() as connection:
+        patient_list = connection.execute(
+            "SELECT id, name FROM patients ORDER BY name"
+        ).fetchall()
+        doctor_list = connection.execute(
+            "SELECT id, name, specialization FROM doctors ORDER BY name"
+        ).fetchall()
+
+    return render_template(
+        "edit_appointment.html",
+        appointment=form_data,
+        patients=patient_list,
+        doctors=doctor_list,
+        error=error
+    )
 @app.route("/appointments/<int:appointment_id>/cancel", methods=["POST"])
 def cancel_appointment(appointment_id):
     with get_connection() as connection:
@@ -382,6 +490,7 @@ def cancel_appointment(appointment_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 

@@ -70,6 +70,7 @@
                             <td>{{ appointment.status }}</td>
                             <td>
                                 {% if appointment.status == "Scheduled" %}
+                                <a class="button" href="{{ url_for('edit_appointment', appointment_id=appointment.id) }}">Edit</a>
                                 <form method="post" action="{{ url_for('cancel_appointment', appointment_id=appointment.id) }}">
                                     <button class="delete-button" type="submit">Cancel</button>
                                 </form>
@@ -87,4 +88,5 @@
     </main>
 </body>
 </html>
+
 
