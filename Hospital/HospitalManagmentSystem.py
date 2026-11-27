@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 
-#abstract Basis class
+                     
 class Person(ABC):
     def __init__(self, name):
         self.name = name
 
-    #jede unterklasse muss diese Methode implementieren
+                                                       
     @abstractmethod
     def get_info(self):
         pass
@@ -18,12 +18,12 @@ class Patients(Person):
         self.phone = phone
         self.address = address
 
-# Getter-Methode für das Alter und Validierung 
+                                               
     @property
     def age(self):
         return self._age
 
-# Setter-Methode für das Alter mit Validierung
+                                              
     @age.setter
     def age(self, value):
         if not isinstance(value, int) or value < 0:
@@ -33,7 +33,7 @@ class Patients(Person):
     def get_patient_info(self):
         return self.name, self.age, self.gender, self.phone, self.address
     
-# Implementierung der abstrakten Methode get_info
+                                                 
     def get_info(self):
         return self.get_patient_info()
 
@@ -47,7 +47,7 @@ class Doctors(Person):
     def get_doctor_info(self):
         return self.name, self.specialization, self.available, self.salary
     
-# Implementierung der abstrakten Methode get_info
+                                                 
     def get_info(self):
         return self.get_doctor_info()
 
@@ -70,7 +70,7 @@ class Nurses(Person):
         def get_nurse_info(self):
             return self.name, self.department, self.shift
 
-# Implementierung der abstrakten Methode get_info
+                                                 
         def get_info(self):
             return self.get_nurse_info()
 
@@ -391,39 +391,39 @@ class ManagementSystem:
         return self.Roles
 
 
-#inheritance example
+                    
 
-# Ein Patientenobjekt erstellen
+                               
 patient1 = Patients("Ali", 30, "Male", "12345", "Essen")
 
-# Den geerbten Namen ausgeben
+                             
 print(patient1.name)
 
-# Das Alter des Patienten ausgeben
+                                  
 print(patient1.age)
 
-# Alle Patientendaten ausgeben
+                              
 print(patient1.get_patient_info())
 
-# Überprüfen, ob Patients von Person erbt
+                                         
 print(isinstance(patient1, Person))
 
-#######################################
-#Encapsulation example
+                                       
+                      
 
 patient1 = Patients("Mo Doe", 30, "Male", "1234567890", "123 Main St")
 
-patient1.age = 31  # Valid age assignment
-print(patient1.age)  # Output: 31
+patient1.age = 31                        
+print(patient1.age)              
 
-# Invalid age assignment
+                        
 try:
-    patient1.age = -5  # This will raise a ValueError
+    patient1.age = -5                                
 except ValueError as e:
-    print(e)  # Output: Age cannot be String or negative.
-##############################################
+    print(e)                                             
+                                              
 
-#polymorphism example
+                     
 
 patient = Patients("John Doe", 30, "Male", "1234567890", "123 Main St")
 doctor = Doctors("Dr. Smith", "Cardiology", True, 100000)
@@ -432,23 +432,23 @@ nurse = Nurses("Nurse Jane", "Pediatrics", "Day")
 persons = [patient, doctor, nurse]
 
 for person in persons:
-    print(person.get_info())  # Calls the appropriate get_info method based on the object type
+    print(person.get_info())                                                                  
 
-#############################################
+                                             
 
-# Abstract class example
+                        
 
 
-# Eine Person direkt erstellen
+                              
 try:
     person = Person("Ali")
 except TypeError:
     print("Person kann nicht direkt erstellt werden")
 
-# Einen Patienten erstellen
+                           
 patient = Patients("Ali", 30, "Male", "12345", "Essen")
 
-# Die abstrakte Methode ist in Patients implementiert
+                                                     
 print(patient.get_info())
 
-#####################################################
+                                                     
