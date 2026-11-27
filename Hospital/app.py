@@ -1,8 +1,10 @@
 ﻿from flask import Flask, render_template, request, redirect, url_for
+from nurse_routes import nurses_bp
 import os
 import sqlite3
 
 app = Flask(__name__)
+app.register_blueprint(nurses_bp)
 DATABASE = os.path.join(app.root_path, "hospital.db")
 
 
@@ -112,6 +114,70 @@ def patients():
     return render_template("patients.html", patients=patient_list, error=error)
 
 
+
+@app.route("/patients/<int:patient_id>/edit", methods=["GET", "POST"])
+def edit_patient(patient_id):
+    with get_connection() as connection:
+        patient = connection.execute(
+            "SELECT * FROM patients WHERE id = ?",
+            (patient_id,)
+        ).fetchone()
+
+    if patient is None:
+        return redirect(url_for("patients"))
+
+    form_data = {
+        "name": patient["name"],
+        "age": patient["age"],
+        "gender": patient["gender"],
+        "phone": patient["phone"],
+        "address": patient["address"]
+    }
+    error = None
+
+    if request.method == "POST":
+        form_data = {
+            "name": request.form.get("name", "").strip(),
+            "age": request.form.get("age", "").strip(),
+            "gender": request.form.get("gender", "").strip(),
+            "phone": request.form.get("phone", "").strip(),
+            "address": request.form.get("address", "").strip()
+        }
+
+        if not all(form_data.values()):
+            error = "Please complete all fields."
+        else:
+            try:
+                age = int(form_data["age"])
+                if age < 0:
+                    error = "Age cannot be negative."
+            except ValueError:
+                error = "Age must be a whole number."
+
+        if error is None:
+            with get_connection() as connection:
+                connection.execute(
+                    """
+                    UPDATE patients
+                    SET name = ?, age = ?, gender = ?, phone = ?, address = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        form_data["name"],
+                        age,
+                        form_data["gender"],
+                        form_data["phone"],
+                        form_data["address"],
+                        patient_id
+                    )
+                )
+            return redirect(url_for("patients"))
+
+    return render_template(
+        "edit_patient.html",
+        patient=form_data,
+        error=error
+    )
 @app.route("/patients/<int:patient_id>/delete", methods=["POST"])
 def delete_patient(patient_id):
     with get_connection() as connection:
@@ -260,3 +326,5 @@ def cancel_appointment(appointment_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
