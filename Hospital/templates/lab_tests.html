@@ -53,7 +53,8 @@
                             <td>{{ test.test_type }}</td>
                             <td>{{ "%.2f"|format(test.price) }}</td>
                             <td>
-                                <form method="post" action="{{ url_for('lab_tests.delete_test', test_id=test.id) }}">
+                                                                <a class="button" href="{{ url_for('lab_tests.edit_test', test_id=test.id) }}">Edit</a>
+<form method="post" action="{{ url_for('lab_tests.delete_test', test_id=test.id) }}">
                                     <button class="delete-button" type="submit">Delete</button>
                                 </form>
                             </td>
@@ -69,3 +70,4 @@
     </main>
 </body>
 </html>
+
