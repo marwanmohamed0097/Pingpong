@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Hospital Management</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
+            <a href="{{ url_for('medicines.medicine_list') }}">Medicines</a>
+            <a href="{{ url_for('nurses.nurse_list') }}">Nurses</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Edit Doctor</h2>
+        <section class="card form-card">
+            {% if error %}<p class="error">{{ error }}</p>{% endif %}
+            <form method="post">
+                <label for="name">Name</label>
+                <input id="name" name="name" value="{{ doctor.name }}" required>
+
+                <label for="specialization">Specialization</label>
+                <input id="specialization" name="specialization" value="{{ doctor.specialization }}" required>
+
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" value="{{ doctor.phone }}" required>
+
+                <label for="availability">Availability</label>
+                <select id="availability" name="availability" required>
+                    <option value="Available" {% if doctor.availability == "Available" %}selected{% endif %}>Available</option>
+                    <option value="Unavailable" {% if doctor.availability == "Unavailable" %}selected{% endif %}>Unavailable</option>
+                </select>
+
+                <button class="button" type="submit">Update doctor</button>
+                <a class="button" href="{{ url_for('doctors') }}">Back to doctors</a>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

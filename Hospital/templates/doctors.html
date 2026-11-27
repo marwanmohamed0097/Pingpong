@@ -50,6 +50,7 @@
                             <td>{{ doctor.name }}</td><td>{{ doctor.specialization }}</td>
                             <td>{{ doctor.phone }}</td><td>{{ doctor.availability }}</td>
                             <td>
+                                <a class="button" href="{{ url_for('edit_doctor', doctor_id=doctor.id) }}">Edit</a>
                                 <form method="post" action="{{ url_for('delete_doctor', doctor_id=doctor.id) }}">
                                     <button class="delete-button" type="submit">Delete</button>
                                 </form>
@@ -66,4 +67,5 @@
     </main>
 </body>
 </html>
+
 

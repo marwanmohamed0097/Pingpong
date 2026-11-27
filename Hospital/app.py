@@ -216,6 +216,62 @@ def doctors():
     return render_template("doctors.html", doctors=doctor_list, error=error)
 
 
+
+@app.route("/doctors/<int:doctor_id>/edit", methods=["GET", "POST"])
+def edit_doctor(doctor_id):
+    with get_connection() as connection:
+        doctor = connection.execute(
+            "SELECT * FROM doctors WHERE id = ?",
+            (doctor_id,)
+        ).fetchone()
+
+    if doctor is None:
+        return redirect(url_for("doctors"))
+
+    form_data = {
+        "name": doctor["name"],
+        "specialization": doctor["specialization"],
+        "phone": doctor["phone"],
+        "availability": doctor["availability"]
+    }
+    error = None
+
+    if request.method == "POST":
+        form_data = {
+            "name": request.form.get("name", "").strip(),
+            "specialization": request.form.get("specialization", "").strip(),
+            "phone": request.form.get("phone", "").strip(),
+            "availability": request.form.get("availability", "").strip()
+        }
+
+        if not all(form_data.values()):
+            error = "Please complete all fields."
+        elif form_data["availability"] not in ["Available", "Unavailable"]:
+            error = "Please select a valid availability."
+
+        if error is None:
+            with get_connection() as connection:
+                connection.execute(
+                    """
+                    UPDATE doctors
+                    SET name = ?, specialization = ?, phone = ?, availability = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        form_data["name"],
+                        form_data["specialization"],
+                        form_data["phone"],
+                        form_data["availability"],
+                        doctor_id
+                    )
+                )
+            return redirect(url_for("doctors"))
+
+    return render_template(
+        "edit_doctor.html",
+        doctor=form_data,
+        error=error
+    )
 @app.route("/doctors/<int:doctor_id>/delete", methods=["POST"])
 def delete_doctor(doctor_id):
     with get_connection() as connection:
@@ -326,5 +382,6 @@ def cancel_appointment(appointment_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
